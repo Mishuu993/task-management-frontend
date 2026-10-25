@@ -32,7 +32,12 @@ export default function LoginPage() {
   const onSubmit = async (data: LoginCredentials) => {
     setIsLoading(true);
     try {
-      await login(data);
+      const res = await login(data);
+      if (res?.requiresEmailVerification) {
+        toast.success(res.message || "OTP sent to your email! Please verify to complete login.");
+        router.push(`/verify-email?email=${encodeURIComponent(res.email || data.email)}`);
+        return;
+      }
       toast.success("Welcome to TaskFlow!");
       const stored = localStorage.getItem("user");
       const user = stored ? JSON.parse(stored) : null;

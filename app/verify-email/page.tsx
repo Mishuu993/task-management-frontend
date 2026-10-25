@@ -32,8 +32,14 @@ function VerifyEmailContent() {
     setIsLoading(true);
     try {
       await authService.verifyEmail(email, otp);
-      toast.success("Email verified successfully! You can now log in.");
-      router.push("/login");
+      toast.success("Email verified successfully! Welcome to TaskFlow.");
+      const stored = localStorage.getItem("user");
+      const user = stored ? JSON.parse(stored) : null;
+      if (user) {
+        window.location.href = user.role === "admin" ? "/admin" : "/dashboard";
+      } else {
+        router.push("/login");
+      }
     } catch (err) {
       toast.error(getErrorMessage(err));
     } finally {

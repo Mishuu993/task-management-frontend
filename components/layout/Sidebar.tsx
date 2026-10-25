@@ -13,6 +13,7 @@ import {
   LogOut,
   ShieldCheck,
   ClipboardList,
+  UserCheck,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -26,6 +27,7 @@ const adminNavItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/tasks", label: "Tasks", icon: CheckSquare },
   { href: "/admin/users", label: "Users", icon: Users },
+  { href: "/admin/approvals", label: "User Approvals", icon: UserCheck },
   { href: "/admin/logs", label: "System Logs", icon: ClipboardList },
   { href: "/profile", label: "Profile", icon: UserCircle },
 ];

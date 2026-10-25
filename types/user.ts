@@ -7,6 +7,10 @@ export interface User {
   taskCount?: number;
   canCreateTask?: boolean;
   isDeleted?: boolean;
+  approvalStatus?: 'pending' | 'approved' | 'rejected';
+  rejectionReason?: string;
+  rejectedAt?: string;
+  approvedAt?: string;
 }
 
 export interface UsersResponse {

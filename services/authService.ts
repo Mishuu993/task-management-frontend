@@ -7,8 +7,18 @@ export const authService = {
     // Backend API ko Request bheji
     const response = await api.post("/v1/auth/login", credentials);
 
+    if (response.data.data?.requiresEmailVerification) {
+      return {
+        token: "",
+        user: null as any,
+        requiresEmailVerification: true,
+        email: response.data.data.email,
+        message: response.data.data.message,
+      };
+    }
+
     // Backend se aaya hua Token aur User ki detail nikali
-    const token = response.data.data.accessToken; // CHANGED from .token to .accessToken
+    const token = response.data.data.accessToken;
     const refreshToken = response.data.data.refreshToken;
     const user = response.data.data.user;
 
@@ -80,6 +90,16 @@ export const authService = {
   // 8. VERIFY EMAIL
   verifyEmail: async (email: string, otp: string) => {
     const response = await api.post("/v1/auth/verify-email", { email, otp });
+    const data = response.data?.data;
+    if (data?.accessToken && data?.user) {
+      if (typeof window !== "undefined") {
+        localStorage.setItem("token", data.accessToken);
+        if (data.refreshToken) {
+          localStorage.setItem("refreshToken", data.refreshToken);
+        }
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+    }
     return response.data;
   },
 

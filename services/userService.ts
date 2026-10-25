@@ -80,4 +80,38 @@ export const userService = {
     const response = await api.get("/v1/users?limit=100");
     return response.data.data.users || response.data.data;
   },
+
+  getPendingUsers: async (page = 1, limit = 10, search = ""): Promise<{ users: User[]; total: number; totalPages: number }> => {
+    const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+    if (search) params.append("search", search);
+    const response = await api.get(`/v1/admin/users/pending?${params.toString()}`);
+    const data = response.data.data;
+    return {
+      users: data.users || [],
+      total: data.pagination?.totalPendingUsers ?? data.users?.length ?? 0,
+      totalPages: data.pagination?.totalPages ?? 1,
+    };
+  },
+
+  getRejectedUsers: async (page = 1, limit = 10, search = ""): Promise<{ users: User[]; total: number; totalPages: number }> => {
+    const params = new URLSearchParams({ page: page.toString(), limit: limit.toString() });
+    if (search) params.append("search", search);
+    const response = await api.get(`/v1/admin/users/rejected?${params.toString()}`);
+    const data = response.data.data;
+    return {
+      users: data.users || [],
+      total: data.pagination?.totalRejectedUsers ?? data.users?.length ?? 0,
+      totalPages: data.pagination?.totalPages ?? 1,
+    };
+  },
+
+  approveUser: async (id: string): Promise<User> => {
+    const response = await api.patch(`/v1/admin/users/${id}/approve`);
+    return response.data.data;
+  },
+
+  rejectUser: async (id: string, reason?: string): Promise<User> => {
+    const response = await api.patch(`/v1/admin/users/${id}/reject`, { reason });
+    return response.data.data;
+  },
 };

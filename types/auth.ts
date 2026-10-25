@@ -24,6 +24,8 @@ export interface AuthResponse {
   token: string;
   user: User;
   message?: string;
+  requiresEmailVerification?: boolean;
+  email?: string;
 }
 
 export interface AuthState {
